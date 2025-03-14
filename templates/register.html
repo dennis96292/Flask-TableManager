@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>管理帳號</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #121212; color: white; }
+        .container { max-width: 600px; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+
+        /* 🔹 固定表格欄高 */
+        th, td { 
+            padding: 15px;  /* 🔹 讓內容有適當間距 */
+            text-align: center;
+            border: 1px solid #444;
+            height: 50px;  /* 🔹 固定欄高，避免變形 */
+            vertical-align: middle;  /* 🔹 確保內容置中對齊 */
+        }
+
+        th { background-color: #1e1e1e; }
+        .btn { margin: 5px; }
+        .crown { color: gold; font-weight: bold; }
+        .password-cell { cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">帳號管理</h2>
+        <table class="table table-dark table-bordered">
+            <thead>
+                <tr>
+                    <th>帳號</th>
+                    <th>密碼</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="account-table"></tbody>
+        </table>
+        <button class="btn btn-danger" onclick="logout()">登出</button>
+    </div>
+
+    <script>
+        function loadAccounts() {
+            fetch("/api/get_accounts")
+                .then(response => response.json())
+                .then(data => {
+                    let tableBody = document.getElementById("account-table");
+                    tableBody.innerHTML = "";
+
+                    data.forEach(account => {
+                        let tr = document.createElement("tr");
+
+                        let tdUser = document.createElement("td");
+                        tdUser.textContent = account.username;
+                        if (account.username === "admin") {
+                            tdUser.innerHTML += ' <span class="crown">👑</span>'; // admin 顯示皇冠
+                        }
+
+                        let tdPass = document.createElement("td");
+                        tdPass.classList.add("password-cell");
+                        tdPass.dataset.full = account.password;
+                        tdPass.textContent = account.password.length > 10 ? account.password.slice(0, 10) + "..." : account.password;
+                        tdPass.onclick = function () { togglePassword(tdPass); };
+
+                        let tdAction = document.createElement("td");
+                        if (account.username === "admin") {
+                            tdAction.textContent = "不可刪除";
+                        } else {
+                            let delBtn = document.createElement("button");
+                            delBtn.textContent = "刪除";
+                            delBtn.classList.add("btn", "btn-danger");
+                            delBtn.onclick = function() {
+                                if (confirm(`確定刪除帳號 ${account.username}？`)) {
+                                    deleteAccount(account.username);
+                                }
+                            };
+                            tdAction.appendChild(delBtn);
+                        }
+
+                        tr.appendChild(tdUser);
+                        tr.appendChild(tdPass);
+                        tr.appendChild(tdAction);
+                        tableBody.appendChild(tr);
+                    });
+
+                    // 新增帳號的輸入行
+                    let tr = document.createElement("tr");
+
+                    let tdNewUser = document.createElement("td");
+                    let inputUser = document.createElement("input");
+                    inputUser.classList.add("form-control");
+                    inputUser.setAttribute("autocomplete", "off");
+                    inputUser.setAttribute("placeholder", "輸入帳號");
+                    tdNewUser.appendChild(inputUser);
+
+                    let tdNewPass = document.createElement("td");
+                    let inputPass = document.createElement("input");
+                    inputPass.type = "password";
+                    inputPass.classList.add("form-control");
+                    inputPass.setAttribute("autocomplete", "new-password");
+                    inputPass.setAttribute("placeholder", "輸入密碼");
+                    tdNewPass.appendChild(inputPass);
+
+                    let tdNewAction = document.createElement("td");
+                    let addBtn = document.createElement("button");
+                    addBtn.textContent = "新增";
+                    addBtn.classList.add("btn", "btn-success");
+                    addBtn.onclick = function() {
+                        addAccount(inputUser.value.trim(), inputPass.value.trim());
+                    };
+                    tdNewAction.appendChild(addBtn);
+
+                    tr.appendChild(tdNewUser);
+                    tr.appendChild(tdNewPass);
+                    tr.appendChild(tdNewAction);
+                    tableBody.appendChild(tr);
+                });
+        }
+
+        function togglePassword(td) {
+            if (td.dataset.fullVisible === "true") {
+                td.textContent = td.dataset.full.slice(0, 10) + "..."; // 切換回部分顯示
+                td.dataset.fullVisible = "false";
+            } else {
+                td.textContent = td.dataset.full; // 顯示完整密碼
+                td.dataset.fullVisible = "true";
+            }
+        }
+
+        function addAccount(username, password) {
+            if (!username || !password) {
+                alert("帳號與密碼不可為空");
+                return;
+            }
+
+            fetch("/api/add_account", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("帳號新增成功！");
+                    window.location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error("❌ 新增帳號錯誤:", error);
+                alert("伺服器發生錯誤，請稍後再試");
+            });
+        }
+
+        function deleteAccount(username) {
+            fetch(`/api/delete_account/${username}`, { method: "DELETE" })
+                .then(() => loadAccounts());
+        }
+
+        function logout() {
+            fetch('/logout').then(() => window.location.href = '/');
+        }
+
+        loadAccounts();
+    </script>
+</body>
+</html>
