@@ -137,7 +137,34 @@ http://127.0.0.1:5000
 
 ## 📸 UI Preview  
 🌙 **Dark & Modern Interface**  
-*(🔥 You can add screenshots here)*  
+*(🔥 Lets see some screenshots here)*  
+
+## 📸 UI Preview  
+🌙 **Dark & Modern Interface**  
+*(🔥 Let's see some screenshots here)*  
+
+<a href="https://github.com/user-attachments/assets/8c1bca9e-429d-4c81-8bf1-775bd1def842">
+    <img src="https://github.com/user-attachments/assets/8c1bca9e-429d-4c81-8bf1-775bd1def842" width="100%">
+</a>
+
+<p align="center">
+    <a href="https://github.com/user-attachments/assets/c19c7363-ee10-4105-9f20-b81d1440552e">
+        <img src="https://github.com/user-attachments/assets/c19c7363-ee10-4105-9f20-b81d1440552e" width="49%">
+    </a>
+    <a href="https://github.com/user-attachments/assets/5d227111-6bcb-43be-b0c0-ae56dcf9b2c9">
+        <img src="https://github.com/user-attachments/assets/5d227111-6bcb-43be-b0c0-ae56dcf9b2c9" width="49%">
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://github.com/user-attachments/assets/0bef75e1-374a-4798-b9e0-c43ab80733fc">
+        <img src="https://github.com/user-attachments/assets/0bef75e1-374a-4798-b9e0-c43ab80733fc" width="49%">
+    </a>
+    <a href="https://github.com/user-attachments/assets/43b5dec4-9b94-483f-88fd-98166527df5d">
+        <img src="https://github.com/user-attachments/assets/43b5dec4-9b94-483f-88fd-98166527df5d" width="49%">
+    </a>
+</p>
+
 
 ---
 
