@@ -28,7 +28,7 @@ with app.app_context():
     db.create_all()
     # 確保 admin 帳號存在
     if not User.query.filter_by(username="admin").first():
-        admin_user = User(username="admin", password=generate_password_hash("cts20516997"))
+        admin_user = User(username="admin", password=generate_password_hash("123456"))
         db.session.add(admin_user)
         db.session.commit()
 
