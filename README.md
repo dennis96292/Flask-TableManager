@@ -1,4 +1,4 @@
-﻿# Flask Table Manager 🚀  
+# Flask Table Manager 🚀  
 ## Inspired by Andy Huang
 
 📊 **A modern and lightweight table management system built with Flask.**  
@@ -134,10 +134,6 @@ http://127.0.0.1:5000
 ```
 
 ---
-
-## 📸 UI Preview  
-🌙 **Dark & Modern Interface**  
-*(🔥 Lets see some screenshots here)*  
 
 ## 📸 UI Preview  
 🌙 **Dark & Modern Interface**  
