@@ -70,7 +70,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (!data.logged_in) {
-                        window.location.href = "/login";
+                        window.location.href = "/table/login";
                     } else {
                         loadTable();
                     }
@@ -80,14 +80,14 @@
         function logout() {
             fetch('/logout')
                 .then(() => {
-                    window.location.href = '/';
+                    window.location.href = '/table';
                 })
                 .catch(error => console.error('❌ 登出失敗:', error));
         }
 
         function cancelEdit() {
             if (confirm("確定要取消？所有變更將不被保存。")) {
-                window.location.href = "/";
+                window.location.href = "/table";
             }
         }
 
@@ -228,7 +228,7 @@
             }).then(response => response.json())
             .then(response => {
                 console.log("✅ Server response:", response);
-                window.location.href = "/";
+                window.location.href = "/table";
             }).catch(error => {
                 console.error("❌ Error saving data:", error);
             });

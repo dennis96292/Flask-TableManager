@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}留言板{% endblock %}
+{% block content %}
+    <h1 class="text-center">留言板</h1>
+    <a href="/">返回首頁</a>
+    <form action="/add_message" method="POST">
+        <textarea name="content" required class="form-control mt-3"></textarea>
+        <button type="submit">發佈留言</button>
+    </form>
+    <hr>
+    {% for message in messages %}
+        <div class="mt-3 p-3" style="border: 1px solid #444; border-radius: 5px;">
+            <p class="message-content">{{ message.content }}</p>  <!-- 加上 class -->
+            <small>{{ message.timestamp.strftime('%m-%d %H:%M:%S') }}</small>
+
+            <!-- 顯示回覆 -->
+            <div id="replies-{{ message.id }}">
+                {% for reply in message.replies %}
+                    <div class="mt-2 ms-4 p-2" style="border-left: 2px solid #666; padding-left: 10px;">
+                        <p class="reply-content">{{ reply.content }}</p>  <!-- 加上 class -->
+                        <small>{{ reply.timestamp.strftime('%m-%d %H:%M:%S') }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- 回覆表單 -->
+            <form class="reply-form" action="/add_reply/{{ message.id }}" method="POST" data-message-id="{{ message.id }}">
+                <input type="text" name="content" class="form-control mt-2" required>
+                <button type="submit">回覆</button>
+            </form>
+        </div>
+    {% endfor %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $(".reply-form").submit(function (event) {
+                    event.preventDefault();  // 阻止表單的預設行為（避免重新整理）
+
+                    let form = $(this);
+                    let url = form.attr("action");  // 取得 action URL
+                    let messageId = form.data("message-id");  // 取得 message ID
+                    let replyContent = form.find("input[name='content']").val();  // 取得輸入內容
+
+                    $.post(url, { content: replyContent }, function (data) {
+                        if (data.success) {
+                            let replyHtml = `<div class="mt-2 ms-4 p-2" style="border-left: 2px solid #666; padding-left: 10px;">
+                                                <p>${replyContent}</p>
+                                                <small>剛剛</small>
+                                            </div>`;
+                            $("#replies-" + messageId).append(replyHtml);  // 新增回覆
+                            form.find("input[name='content']").val("");  // 清空輸入框
+                        }
+                    });
+                });
+            });
+        </script>
+{% endblock %}

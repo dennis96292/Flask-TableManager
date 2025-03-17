@@ -2,6 +2,11 @@ import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash  # 🔹 加密密碼
+from datetime import datetime
+import pytz
+
+# 設定台灣時區
+taipei_tz = pytz.timezone("Asia/Taipei")
 
 app = Flask(__name__)
 
@@ -23,6 +28,21 @@ class TableData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.JSON)
 
+# 🔹 發言db模組
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=lambda: datetime.now(taipei_tz))  # 改成台灣時間
+    replies = db.relationship('Reply', backref='message', lazy=True)  # 關聯回覆
+
+# 🔹 回覆db模組
+class Reply(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    message_id = db.Column(db.Integer, db.ForeignKey('message.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=lambda: datetime.now(taipei_tz))  # 改成台灣時間
+
+
 # 🔹 初始化資料庫（如果沒有 `database.db` 則建立）
 with app.app_context():
     db.create_all()
@@ -32,10 +52,46 @@ with app.app_context():
         db.session.add(admin_user)
         db.session.commit()
 
-# 🔹 瀏覽頁面
+# 🔹 index頁面
 @app.route('/')
 def index():
+    return render_template('index.html')
+
+# 🔹 Table頁面
+@app.route('/table')
+def table():
     return render_template('table.html')
+
+# 🔹 message_board頁面
+@app.route('/message_board')
+def message_board():
+    messages = Message.query.order_by(Message.timestamp.desc()).limit(500).all()
+    return render_template('message_board.html', messages=messages)
+
+
+# 🔹 新增發言
+@app.route('/add_message', methods=['POST'])
+def add_message():
+    content = request.form.get('content')
+    if content:
+        if Message.query.count() >= 500:
+            oldest_message = Message.query.order_by(Message.timestamp).first()
+            db.session.delete(oldest_message)
+        new_message = Message(content=content)
+        db.session.add(new_message)
+        db.session.commit()
+    return redirect(url_for('message_board'))
+
+# 🔹 新增回覆
+@app.route('/add_reply/<int:message_id>', methods=['POST'])
+def add_reply(message_id):
+    content = request.form.get('content')
+    if content:
+        new_reply = Reply(message_id=message_id, content=content)
+        db.session.add(new_reply)
+        db.session.commit()
+        return jsonify({"success": True})  # 回傳 JSON，讓 AJAX 知道回覆成功
+    return jsonify({"success": False})
 
 # 🔹 檢查登入狀態
 @app.route('/api/check_login')
@@ -43,7 +99,7 @@ def check_login():
     return jsonify({"logged_in": 'user' in session})
 
 # 🔹 使用者登入
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/table/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -60,7 +116,7 @@ def login():
     return render_template('login.html')
 
 # 🔹 管理員登入（進入帳號管理頁面）
-@app.route('/admin_login', methods=['GET', 'POST'])
+@app.route('/table/admin_login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -77,7 +133,7 @@ def admin_login():
     return render_template('admin_login.html')
 
 # 🔹 帳號管理頁面
-@app.route('/register')
+@app.route('/table/register')
 def register():
     if 'user' not in session or session['user'] != "admin":
         return redirect(url_for('admin_login'))
@@ -143,7 +199,7 @@ def save_data():
     return jsonify({"status": "success"})
 
 # 🔹 編輯頁面
-@app.route('/edit')
+@app.route('/table/edit')
 def edit():
     return render_template('edit.html')
 
@@ -151,7 +207,7 @@ def edit():
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('table'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

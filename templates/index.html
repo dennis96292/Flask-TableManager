@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首頁</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* 讓內容垂直置中 */
+            margin: 0;
+        }
+
+        .container {
+            background-color: #1e1e1e;
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            width: 40%; /* 調整寬度 */
+            min-height: 60vh; /* 讓框框變大（3 倍高） */
+        }
+
+        h1 {
+            font-size: 3em; /* 加大標題 */
+            margin-bottom: 40px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .big-button {
+            background-color: #444;
+            color: white;
+            border: none;
+            outline: none;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;  /* 讓 Emoji 和文字分成上下兩行 */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 250px;  /* 讓按鈕寬度適中 */
+            height: 300px; /* 讓按鈕高度足夠 */
+        }
+
+        .emoji {
+            font-size: 4em;  /* 讓 Emoji 變大 */
+            line-height: 1;  /* 讓 Emoji 保持居中 */
+        }
+
+        .button-text {
+            font-size: 1em;  /* 讓文字維持正常大小 */
+            margin-top: 5px;  /* 增加間距 */
+        }
+
+    
+        .big-button:hover {
+            background-color: #666;
+            transform: scale(1.1); /* 滑鼠懸停時放大 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hi!</h1>
+        <div class="button-container">
+            <a href="/table">
+                <button class="big-button">
+                    <span class="emoji">📃</span>
+                    <span class="button-text">前往表格</span>
+                </button>
+            </a>
+            <a href="/message_board">
+                <button class="big-button">
+                    <span class="emoji">💬</span>
+                    <span class="button-text">前往留言板</span>
+                </button>
+            </a>            
+        </div>
+    </div>
+</body>
+</html>

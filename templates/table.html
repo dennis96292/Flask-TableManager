@@ -24,11 +24,23 @@
 
         th { background-color: #1e1e1e; }
         .btn { margin: 10px; }
+        .no-underline {
+            text-decoration: none !important;
+            color: #bb86fc;
+        }
+
+        .no-underline:hover {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <h2 class="text-center">即時表格</h2>
+        <a href="/" class="no-underline">返回首頁</a>
+        <h2></h2>
         <div class="table-responsive">
             <table class="table table-dark table-bordered" id="data-table">
                 <thead>
@@ -37,7 +49,7 @@
                 <tbody id="table-body"></tbody>
             </table>
         </div>
-        <a href="/edit" class="btn btn-primary">前往編輯</a>
+        <a href="/table/edit" class="btn btn-primary">前往編輯</a>
     </div>
 
     <script>

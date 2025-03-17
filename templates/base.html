@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}網站{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        button, input {
+            background-color: #333;
+            color: white;
+            border: 1px solid #444;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        a {
+            color: #bb86fc;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #ffffff;
+        }
+        input, textarea {
+            background-color: #444 !important;  /* 使輸入框背景變暗 */
+            color: white !important;  /* 文字顏色改成白色 */
+            border: 1px solid #666;  /* 增加邊框讓輸入框有層次 */
+            padding: 10px;
+            border-radius: 5px; /* 讓輸入框圓角更柔和 */
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #bbb; /* 讓 placeholder 文字顏色較暗 */
+        }
+        /* 調整留言字體大小為 2 倍 */
+        .message-content {
+            font-size: 2em;  /* 2 倍原本大小 */
+        }
+
+        /* 調整回覆字體大小為 1.5 倍 */
+        .reply-content {
+            font-size: 1.5em;  /* 1.5 倍原本大小 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
